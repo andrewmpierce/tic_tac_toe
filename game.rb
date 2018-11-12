@@ -34,10 +34,6 @@ class Game
     @board = @board.reject{ |x| x == "\n" }
   end
   
-  def get_action
-    $stdin.gets.chomp
-  end
-
   def get_player_input(player)
     invalid_input = true
     while invalid_input
