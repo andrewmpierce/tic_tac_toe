@@ -10,42 +10,48 @@ class Game
   
   def start
     while !game_over?
-      display_board
-      turn(@first_player)
-      break if check_if_game_over
-      display_board
-      turn(@second_player)
-      check_if_game_over
+      take_turn(@first_player)
+      break if game_over?
+      take_turn(@second_player)
     end
   end
 
-  def check_if_game_over
-    return false unless game_over?
+  def take_turn(player)
+    display_board
+    turn(player)
+    end_text if game_over?
+  end
+
+  def end_text
+    return nil unless game_over?
     if winner
       puts "#{winner} won!"
     else
       puts "It's a tie!"
     end
-    true
   end
 
   def display_board
     puts @board.insert(0, "\n").insert(4, "\n").insert(8, "\n").join(' ')
     @board = @board.reject{ |x| x == "\n" }
   end
+
+  def checks_player_input(input) 
+    if available_spaces.include? input
+      return input
+    else
+      puts "Your response is either invalid or the square is already taken. Please enter another response."
+    end
+  end
   
   def get_player_input(player)
-    invalid_input = true
-    while invalid_input
+    while true
       puts "#{player}, enter your square"
-      answer = $stdin.gets.chomp
-      if available_spaces.include? answer
-        invalid_input = false
-      else
-        puts "Your response is either invalid or the square is already taken. Please enter another response."
-      end
+      input = $stdin.gets.chomp
+      validated_input = checks_player_input(input) 
+      break if validated_input
     end
-    answer
+    validated_input
   end
   
   def available_spaces
@@ -56,7 +62,6 @@ class Game
     player_input = get_player_input(player)
     mark = player == @first_player ? @first_player_marker : @second_player_marker
     @board = @board.map{ |x| x == player_input ? mark : x }
-    puts @board
   end
 
   def starting_board

@@ -5,6 +5,17 @@ describe Game do
     allow($stdout).to receive(:write)
   end
 
+  it 'can instantiate a Game' do 
+    game = Game.new
+    expect(game).not_to be_nil
+  end
+
+  it 'recognizes invalid input' do 
+    game = Game.new('Player One', 'Player Two')
+    allow($stdin).to receive(:gets).and_return('abc')
+    expect(game.checks_player_input('abc')).to be_nil  
+  end
+
   it 'can display a starting board' do 
     Game.new.display_board == ['1', '2', '3', '\n', '4', '5', '6', '\n', '7', '8', '9']
   end
